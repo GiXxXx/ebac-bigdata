@@ -1,42 +1,205 @@
+    
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka-server
+  name: kafka-internal-0
+  namespace: default
+spec:
+  clusterIP: None
+  ports:
+  - port: 90
+    targetPort: 90
+    name: port0
+  selector:
+    app: kafka0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-internal-1
+  namespace: default
+spec:
+  clusterIP: None
+  ports:
+  - port: 91
+    targetPort: 91
+    name: port1
+  selector:
+    app: kafka1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-internal-2
+  namespace: default
+spec:
+  clusterIP: None
+  ports:
+  - port: 92
+    targetPort: 92
+    name: port2
+  selector:
+    app: kafka2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-server-0
   namespace: default
 spec:
   ports:
-  - port: 29091
-    nodePort: 30001
+  - port: 8080
+    nodePort: 30000
+    targetPort: 80
     name: port0
   type: NodePort
   selector:
-    app: kafka-server
+    app: kafka0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-server-1
+  namespace: default
+spec:
+  ports:
+  - port: 8081
+    nodePort: 30001
+    targetPort: 81
+    name: port1
+  type: NodePort
+  selector:
+    app: kafka1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-server-2
+  namespace: default
+spec:
+  ports:
+  - port: 8082
+    nodePort: 30002
+    targetPort: 82
+    name: port2
+  type: NodePort
+  selector:
+    app: kafka2
 ---
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: broker
+  name: broker-0
   namespace: default
 spec:
-  serviceName: "kafka-server"
-  replicas: 2
+  serviceName: "kafka-server-0"
+  replicas: 1
   template:
     metadata:
       labels:
-        app: kafka-server
+        appBase: kafka
+        app: kafka0
     spec:
       terminationGracePeriodSeconds: 10
       containers:
-      - name: kafka-server
+      - name: kafka0
         image: confluentinc/cp-kafka:latest
         env:
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: "zookeeper:32181"
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+        - name: LISTENERS
+          value: OUTSIDE://broker-0-0.kafka-server-0.default.svc.cluster.local:80,INSIDE://kafka-internal-0:90
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: PLAINTEXT://broker-0.kafka-server.default.svc.cluster.local:20901
+          value: OUTSIDE://broker-0-0.kafka-server-0.default.svc.cluster.local:80,INSIDE://kafka-internal-0:90
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: INSIDE
         - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
           value: "2"
+        - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+          value: "true"
         ports:
-        - containerPort: 20901
-        - containerPort: 20902
+        - name: port0
+          containerPort: 80
+        - name: port1
+          containerPort: 90
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: broker-1
+  namespace: default
+spec:
+  serviceName: "kafka-server-1"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        appBase: kafka
+        app: kafka1
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: kafka
+        image: confluentinc/cp-kafka:latest
+        env:
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: "zookeeper:32181"
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+        - name: LISTENERS
+          value: OUTSIDE://broker-1-0.kafka-server-1.default.svc.cluster.local:81,INSIDE://kafka-internal-1:91
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: OUTSIDE://broker-1-0.kafka-server-1.default.svc.cluster.local:81,INSIDE://kafka-internal-1:91
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: INSIDE
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "2"
+        - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+          value: "true"
+        ports:
+        - name: port0
+          containerPort: 81
+        - name: port1
+          containerPort: 91
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: broker-2
+  namespace: default
+spec:
+  serviceName: "kafka-server-2"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        appBase: kafka
+        app: kafka2
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: kafka
+        image: confluentinc/cp-kafka:latest
+        env:
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: "zookeeper:32181"
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+        - name: LISTENERS
+          value: OUTSIDE://broker-2-0.kafka-server-2.default.svc.cluster.local:82,INSIDE://kafka-internal-2:92
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: OUTSIDE://broker-2-0.kafka-server-2.default.svc.cluster.local:82,INSIDE://kafka-internal-2:92
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: INSIDE
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "2"
+        - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+          value: "true"
+        ports:
+        - name: port0
+          containerPort: 82
+        - name: port1
+          containerPort: 92
