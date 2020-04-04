@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: spark-master
-          image: navicore/spark:1.6.2a
+          image: jason1992/spark-k8s
           imagePullPolicy: Always
           env:
           - name: SPARK_SERVICE_NAME
@@ -25,4 +25,5 @@ spec:
           resources:
             requests:
               cpu: 100m
+
 

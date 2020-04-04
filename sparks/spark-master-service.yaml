@@ -1,15 +1,31 @@
+---
 kind: Service
 apiVersion: v1
 metadata:
   name: spark-master
 spec:
   ports:
-    - port: 7077
-      targetPort: 7077
-      name: spark
     - port: 8080
       targetPort: 8080
       name: http
+    - port: 7077
+      targetPort: 7077
+      name: spark
   selector:
     component: spark-master
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: spark-master-external
+spec:
+  ports:
+    - port: 7077
+      targetPort: 7077
+      nodePort: 30007
+      name: spark
+  type: NodePort
+  selector:
+    component: spark-master
+
 

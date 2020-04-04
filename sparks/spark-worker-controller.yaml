@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: spark-worker
-          image: navicore/spark:1.6.2a
+          image: jason1992/spark-k8s
           imagePullPolicy: Always
           env:
           - name: SPARK_WORKER_OPTS
@@ -30,3 +30,8 @@ spec:
           resources:
             requests:
               cpu: 1000m
+              memory: 8192Mi
+            limits:
+              cpu: 1000m
+              memory: 8192Mi
+
