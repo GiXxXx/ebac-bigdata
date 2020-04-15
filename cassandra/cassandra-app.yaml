@@ -4,7 +4,7 @@ metadata:
   name: cassandra
 spec:
   serviceName: cassandra
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: cassandra
-        image: cassandra:3
+        image: jason1992/cassandra:latest 
         ports:
           - containerPort: 7000
             name: intra-node
