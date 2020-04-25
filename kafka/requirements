@@ -1,0 +1,8 @@
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+
+./miniconda3/condabin/conda activate base
+
+./miniconda3/condabin/conda install -c conda-forge kafka-python
+./miniconda3/condabin/conda install pandas
+./miniconda3/condabin/conda install -c conda-forge cassandra-driver
