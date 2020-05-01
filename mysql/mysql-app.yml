@@ -15,11 +15,10 @@ kind: StatefulSet
 metadata:
   name: mysql
 spec:
+  serviceName: mysql
   selector:
     matchLabels:
       app: mysql
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
