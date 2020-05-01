@@ -5,12 +5,13 @@ metadata:
 spec:
   ports:
   - port: 3306
+    nodePort: 33060
   selector:
     app: mysql
-  clusterIP: None
+  type: NodePort
 ---
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mysql
 spec:
@@ -36,9 +37,6 @@ spec:
           name: mysql
         volumeMounts:
         - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-        volumeMounts:
-        - name: mysql-data
           mountPath: /var/lib/mysql
   volumeClaimTemplates:
   - metadata:
