@@ -1,4 +1,31 @@
 
+CREATE KEYSPACE kk WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+CREATE TABLE kk.fact_booking (
+  booking_id int,
+  user_id int,
+  booking_time timestamp,
+  participation_time timestamp,
+  destination_country_id int,
+  activity_id int,
+  activity varchar,
+  merchant_id int,
+  bu_level_1 varchar,
+  bu_level_2 varchar,
+  pay_amount double,
+  is_domestic boolean,
+  is_new_order boolean,
+  is_fraud boolean,
+  participants int,
+  review_id int,
+  review_time timestamp,
+  review_score double,
+  review_eng varchar,
+  is_robot boolean,
+  PRIMARY KEY (booking_id, user_id, booking_time)
+);
+
+
+
 drop keyspace kk;
 CREATE KEYSPACE kk WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
 
