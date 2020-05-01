@@ -5,7 +5,7 @@ metadata:
 spec:
   ports:
   - port: 3306
-    nodePort: 33060
+    nodePort: 30306
   selector:
     app: mysql
   type: NodePort
@@ -29,13 +29,13 @@ spec:
         name: mysql
         env:
           # Use secret in real usage
-        - name: ebac_bigdata
+        - name: MYSQL_ROOT_PASSWORD
           value: password
         ports:
         - containerPort: 3306
           name: mysql
         volumeMounts:
-        - name: mysql-persistent-storage
+        - name: mysql-data 
           mountPath: /var/lib/mysql
   volumeClaimTemplates:
   - metadata:
