@@ -25,10 +25,10 @@ val sql=f"""
 select
     *
 from
-    kk.booking
+    kk.review
 where
-    booking_time >= '$yesterdayDateString_start%s' and
-    booking_time <= '$yesterdayDateString_end%s'
+    review_time >= '$yesterdayDateString_start%s' and
+    review_time <= '$yesterdayDateString_end%s'
 """
 
 // read into rdd
@@ -41,14 +41,14 @@ val booking_df = sqlcontext.read
   .load()
 
 // No. of records in cassandra before
-val rdd = sc.cassandraTable("kk", "booking_demo")
+val rdd = sc.cassandraTable("kk", "review_demo")
 rdd.count
 
 booking_df.write
-    .options(Map("table" -> "booking_demo", "keyspace" -> "kk"))
+    .options(Map("table" -> "review_demo", "keyspace" -> "kk"))
     .mode("append")
     .format("org.apache.spark.sql.cassandra").save()
 
 // No. of records in cassandra after
-val rdd = sc.cassandraTable("kk", "booking_demo")
+val rdd = sc.cassandraTable("kk", "review_demo")
 rdd.count
