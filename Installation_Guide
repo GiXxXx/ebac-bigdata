@@ -1,0 +1,25 @@
+1. Start a google kubenetes cluster with minimum 8 vCPUs and 64GB Rams
+
+2. Go to cluster VM list and find out the {k8s public IP} from any of the VM.
+
+3. Go to the cloud terminal and git clone https://github.com/GiXxXx/ebac-bigdata
+
+4. Run following shell commands to setup mysql, cassandra, spark and zepplin
+    kubectl apply -f ebac-bigdata/cassandra/
+    kubectl apply -f ebac-bigdata/mysql/
+    kubectl apply -f ebac-bigdata/sparks/
+
+5. Go to deployment manager and deploy kafka provided by
+Google Click to Deploy
+
+6. ssh into the Kafka VM and git clone https://github.com/GiXxXx/ebac-bigdata
+
+7. install the depenencies as indicated in ebac-bigdata/kafka/requirements
+
+8. run following command to start producer and consumer
+    python ebac-bigdata/kafka/event_browsing_producer.py
+    python ebac-bigdata/kafka/event_browsing_consumer.py
+
+9. open http://{k8s public IP}:30000 to access Zepplin Notebook (for any IP appeared in the notebook, except for localhost, change to {k8s public IP})
+
+10. Setup completed!
