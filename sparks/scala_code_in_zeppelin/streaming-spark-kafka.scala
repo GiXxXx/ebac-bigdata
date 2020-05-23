@@ -1,4 +1,3 @@
-// scala code used in Zeppelin
 // Kafka stream demo
 import kafka.serializer.StringDecoder
 import org.apache.spark.SparkConf
