@@ -3,6 +3,7 @@ from kafka import KafkaConsumer
 from time import sleep
 from datetime import datetime
 
+# configure consumer
 consumer = KafkaConsumer(
     'event_browsing',
      bootstrap_servers=['localhost:9092'],
@@ -12,10 +13,12 @@ consumer = KafkaConsumer(
      value_deserializer=lambda x: loads(x.decode('utf-8'))
 )
 
+# configura cassandra connection
 from cassandra.cluster import Cluster
 cluster = Cluster(['34.68.130.165'], port=31942)
 session = cluster.connect('kk')
 
+# prepare CQL insert query
 event_browsing_sql_str = session.prepare('''
     insert into kk.event_browsing (
         session_id,
@@ -34,6 +37,7 @@ event_browsing_sql_str = session.prepare('''
     ) values (?,?,?,?,?,?,?,?,?,?,?,?,?)
     ''')
 
+# get message from consumer and load into Cassandra
 for message in consumer:
     line = message.value
     data = loads(line)

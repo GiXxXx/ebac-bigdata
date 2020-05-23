@@ -1,6 +1,8 @@
 
+# create schema
 create schema kk;
 
+# create tables
 CREATE TABLE review (
   review_id int,
   review_time timestamp,
@@ -34,7 +36,7 @@ CREATE TABLE booking (
   PRIMARY KEY (booking_id, user_id, booking_time)
 );
 
-
+# load data
 LOAD DATA LOCAL INFILE '/tmp/food_booking.csv'
 INTO TABLE booking
 COLUMNS TERMINATED BY ','
