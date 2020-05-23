@@ -13,7 +13,7 @@ consumer = KafkaConsumer(
 )
 
 from cassandra.cluster import Cluster
-cluster = Cluster(['34.70.63.202'], port=31942)
+cluster = Cluster(['34.68.130.165'], port=31942)
 session = cluster.connect('kk')
 
 event_browsing_sql_str = session.prepare('''

@@ -21,7 +21,7 @@ CREATE TABLE kk.booking (
   PRIMARY KEY (booking_id, user_id, booking_time)
 );
 
-copy kk.booking (booking_id,user_id,booking_time,participation_time, destination_country_id,activity_id,activity,merchant_id,bu_level_1,bu_level_2,pay_amount,is_domestic,is_new_order,is_fraud,participants) from '/tmp food_booking.csv' with HEADER = TRUE;
+copy kk.booking (booking_id,user_id,booking_time,participation_time, destination_country_id,activity_id,activity,merchant_id,bu_level_1,bu_level_2,pay_amount,is_domestic,is_new_order,is_fraud,participants) from '/tmp/food_booking.csv' with HEADER = TRUE;
 
 
 drop table kk.review;
